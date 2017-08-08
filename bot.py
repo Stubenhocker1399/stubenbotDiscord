@@ -27,13 +27,13 @@ def stdoutIO(stdout=None):
     yield stdout
     sys.stdout = old
 
-g_functionWhitelist = [str, len, range, abs, dict, min, max, all, any, bin, bool, bytearray, bytes, chr, complex, setattr, delattr, divmod, enumerate, filter, float, format, frozenset, hasattr, hash, hex, id, int, isinstance, issubclass, iter, list, next, object, oct, ord, pow, repr, reversed, round, set, slice, sorted, staticmethod, str, sum, super, tuple, type, zip, str, print]
-
 def safe_call(*args, **kwargs):
     #print "safe_call() with args: "
     #for arg in args:
     #	print str(arg)
     #return None 
+    g_functionWhitelist = [str, len, range, abs, dict, min, max, all, any, bin, bool, bytearray, bytes, chr, complex, setattr, delattr, divmod, enumerate, filter, float, format, frozenset, hasattr, hash, hex, id, int, isinstance, issubclass, iter, list, next, object, oct, ord, pow, repr, reversed, round, set, slice, sorted, staticmethod, str, sum, super, tuple, type, zip, str, print]
+
     func = args[0]
     argumentList = list(args)
     #print "trying to call function: " + func.__name__
