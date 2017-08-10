@@ -1,23 +1,22 @@
 import discord
 from discord.ext import commands
-#import asyncio
-##
+import re
+import aiohttp
+
+#####python#####
 import ast
 from collections import deque
 import contextlib
 import sys
-#import StringIO 
 from io import StringIO
-##
+################
 
-#client = discord.Client()
-description = '''A discord.py test
+description = '''
+A bot for executing python commands.
 '''
 bot = commands.Bot(command_prefix='/', description=description)
 
-####################
-
-
+#####python#####
 @contextlib.contextmanager
 def stdoutIO(stdout=None):
     old = sys.stdout
@@ -154,9 +153,7 @@ async def py(ctx, *, code):
                 if not s.getvalue() == "":
                     #await bot.say(s.getvalue())
                     await bot.say("```\n"+s.getvalue()+"```")
-
-
-####################
+################
 
 
 @bot.event
@@ -166,25 +163,22 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
-#@client.event
-#async def on_message(message):
-#    if message.content.startswith('!test'):
-#        counter = 0
-#        tmp = await client.send_message(message.channel, 'Calculating messages...')
-#        async for log in client.logs_from(message.channel, limit=100):
-#            if log.author == message.author:
-#                counter += 1
-#
-#        await client.edit_message(tmp, 'You have {} messages.'.format(counter))
-#
-#//@bot.command()
-#//async def testcmd(ctx,inputstr : str):
-#//    """Just a test."""
-#//    await ctx.say(inputstr)
+host = 'bpmbot.dokku.kathar.in'
+hostPrepend = '/emote/'
+hostAppend = '.png'
+@bot.event
+async def on_message(message):
+    if '[](/' in message.content:
+        m = re.findall ( '\[\]\(\/(.*?)\)', message.content, re.DOTALL)
+        print('Detected emote: ' + str(m))
+        for emote in m:
+            print('Found valid emote "' + emote + '"')
+            async with aiohttp.get('https://' + host + hostPrepend + emote + hostAppend) as r:
+                if r.status == 200:
+                    embed = discord.Embed()
+                    embed.set_image(url='https://' + host + hostPrepend + emote + hostAppend)
+                    await bot.send_message(message.channel, embed=embed)
 
-#@bot.command()
-#async def hello(ctx):
-#    await ctx.say("world")
 @bot.command()
 async def hello():
     """Say world."""
