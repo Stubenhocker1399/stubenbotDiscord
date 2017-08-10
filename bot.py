@@ -163,12 +163,13 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
+scale = 1
 host = 'bpmbot.dokku.kathar.in'
 hostPrepend = '/emote/'
-hostAppend = '.png'
 @bot.event
 async def on_message(message):
     if '[](/' in message.content:
+        hostAppend = '@' + str(scale) + 'x.png'
         m = re.findall ( '\[\]\(\/(.*?)\)', message.content, re.DOTALL)
         print('Detected emote: ' + str(m))
         for emote in m:
@@ -178,6 +179,14 @@ async def on_message(message):
                     embed = discord.Embed()
                     embed.set_image(url='https://' + host + hostPrepend + emote + hostAppend)
                     await bot.send_message(message.channel, embed=embed)
+    await bot.process_commands(message)
+
+@bot.command()
+async def setscale(Scale):
+    global scale 
+    scale = Scale
+    await bot.say("Scale set!")
+
 
 @bot.command()
 async def hello():
