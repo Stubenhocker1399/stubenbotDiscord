@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import asyncio
 import re
 import discord
@@ -161,7 +161,7 @@ async def update_time():
     await bot.wait_until_ready()
     while not bot.is_closed:
         #datetime.utcnow()
-        gamestring = str(datetime.utcnow() + datetime.timedelta(hours=10))
+        gamestring = str(datetime.utcnow() + timedelta(hours=10))
 
         await bot.change_presence(game=discord.Game(name=gamestring))
         await asyncio.sleep(60) # task runs every 60 seconds
