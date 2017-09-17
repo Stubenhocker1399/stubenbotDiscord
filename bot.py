@@ -1,8 +1,9 @@
+from datetime import datetime
+import asyncio
+import re
 import discord
 from discord.ext import commands
-import re
 import aiohttp
-import asyncio
 
 #####python#####
 import ast
@@ -155,23 +156,14 @@ async def py(ctx, *, code):
                     #await bot.say(s.getvalue())
                     await bot.say("```\n"+s.getvalue()+"```")
 ################
-
+gamestring = "init"
 async def update_time():
     await bot.wait_until_ready()
-    counter = 0
-    channel = discord.Object(id='331911030760407040') #331911030760407040 is the #welcome channel
     while not bot.is_closed:
-        async for log in bot.logs_from(channel, limit=100):
-            if log.author == bot.user:
-                #counter += 1
-                print('Bot author found' + str(log.content))
-                botmessage=log
-                break
-        if not 'botmessage' in locals():
-            botmessage = await bot.send_message(channel, "Init")
-        print(botmessage.content)
-        await bot.edit_message(botmessage, "Heyyyyyyyyyyyyyy" + str(counter))
-        counter += 1
+        #datetime.utcnow()
+        gamestring = str(datetime.utcnow() + datetime.timedelta(hours=10))
+
+        await bot.change_presence(game=discord.Game(name=gamestring))
         await asyncio.sleep(60) # task runs every 60 seconds
 
 bot.loop.create_task(update_time())
