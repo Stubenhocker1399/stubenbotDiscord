@@ -206,7 +206,7 @@ async def setscale(Scale):
 db = TinyDB('db.json')
 Quote = Query()
 @bot.command()
-async def quotes():
+async def quote():
     if(len(db) == 0):
         await bot.say("`No quotes found.`")
     else:
@@ -220,7 +220,7 @@ async def addquote(quoteText):
 
 @bot.command()
 async def rmquote(quoteText):
-    if db.contains({Quote.text == quoteText}):
+    if db.contains(Quote.text == quoteText):
         db.update(delete('text'), Quote.text == quoteText)
         await bot.say("`Quote removed`")
     else:
