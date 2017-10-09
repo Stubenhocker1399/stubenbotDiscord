@@ -4,7 +4,7 @@ import re
 import discord
 from discord.ext import commands
 import aiohttp
-from tinydb import TinyDB, Query
+from tinydb import TinyDB, where
 from tinydb.operations import delete
 from random import randint
 
@@ -203,8 +203,7 @@ async def setscale(Scale):
     await bot.say("Scale set!")
 
 
-db = TinyDB('db.json')
-Quote = Query()
+db = TinyDB('db.json'
 @bot.command()
 async def quote():
     if(len(db) == 0):
@@ -220,8 +219,8 @@ async def addquote(quoteText):
 
 @bot.command()
 async def rmquote(quoteText):
-    if db.contains(Quote.text == quoteText):
-        db.update(delete('text'), Quote.text == quoteText)
+    if db.contains(where('text') == quoteText):
+        db.update(delete('text'), where('text') == quoteText)
         await bot.say("`Quote removed`")
     else:
         await bot.say("`Quote not found`")
