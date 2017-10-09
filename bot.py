@@ -196,13 +196,13 @@ async def on_message(message):
                     await bot.send_message(message.channel, embed=embed)
     if message.content.startswith('/addquote '):
         db.insert({'text':message.content[10:]})
-        await client.send_message(message.channel, "`Quote saved`")
+        await bot.send_message(message.channel, "`Quote saved`")
     if message.content.startswith('/rmquote '):
         if db.contains(where('text') == message.content[9:]):
             db.update(delete('text'), where('text') == message.content[9:])
-            await client.send_message(message.channel, "`Quote removed`")
+            await bot.send_message(message.channel, "`Quote removed`")
         else:
-            await client.send_message(message.channel, "`Quote not found`")
+            await bot.send_message(message.channel, "`Quote not found`")
 
     await bot.process_commands(message)
 
