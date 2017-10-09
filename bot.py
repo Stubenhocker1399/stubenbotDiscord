@@ -203,7 +203,7 @@ async def setscale(Scale):
     await bot.say("Scale set!")
 
 
-db = TinyDB('db.json'
+db = TinyDB('db.json')
 @bot.command()
 async def quote():
     if(len(db) == 0):
