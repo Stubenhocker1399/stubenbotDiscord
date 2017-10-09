@@ -221,7 +221,7 @@ async def addquote(quoteText):
 @bot.command()
 async def rmquote(quoteText):
     if db.contains({Quote.text == quoteText}):
-        db.update(delete('text'), Quote.text == quoteText})
+        db.update(delete('text'), Quote.text == quoteText)
         await bot.say("`Quote removed`")
     else:
         await bot.say("`Quote not found`")
