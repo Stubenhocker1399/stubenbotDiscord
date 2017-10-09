@@ -199,7 +199,8 @@ async def on_message(message):
         await bot.send_message(message.channel, "`Quote saved`")
     if message.content.startswith('/rmquote '):
         if db.contains(where('text') == message.content[9:]):
-            db.update(delete('text'), where('text') == message.content[9:])
+            el = db.get(where('text') == message.content[9:])
+            db.remove(doc_ids=[el])
             await bot.send_message(message.channel, "`Quote removed`")
         else:
             await bot.send_message(message.channel, "`Quote not found`")
