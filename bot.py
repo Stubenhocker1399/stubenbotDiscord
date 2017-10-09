@@ -210,7 +210,7 @@ async def quote():
         await bot.say("`No quotes found.`")
     else:
         x = randint(1, len(db))
-        await bot.say(str(db.all()[x-1].text))
+        await bot.say(str(db.all()[x-1]['text']))
 
 @bot.command()
 async def addquote(quoteText):
