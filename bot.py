@@ -4,6 +4,8 @@ import re
 import discord
 from discord.ext import commands
 import aiohttp
+from tinydb import TinyDB, Query
+from random import randint
 
 #####python#####
 import ast
@@ -199,6 +201,28 @@ async def setscale(Scale):
     scale = Scale
     await bot.say("Scale set!")
 
+
+db = TinyDB('db.json')
+@bot.command()
+async def quotes():
+    if(len(db) == 0):
+        await bot.say("`No quotes found.`")
+    else:
+        x = randint(0, len(db))
+        await bot.say(str(db.all()[x].text))
+
+@bot.command()
+async def addquote(quoteText):
+    db.insert({'text':quoteText})
+    await bot.say("`Quote saved`")
+
+@bot.command()
+async def rmquote(quoteText):
+    db.contains({text == quoteText}):
+        db.remove({'text':quoteText})
+        await bot.say("`Quote removed`")
+    else:
+        await bot.say("`Quote not found`")
 
 @bot.command()
 async def hello():
