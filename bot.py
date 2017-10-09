@@ -200,7 +200,7 @@ async def on_message(message):
     if message.content.startswith('/rmquote '):
         if db.contains(where('text') == message.content[9:]):
             el = db.get(where('text') == message.content[9:])
-            db.remove(doc_ids=[el])
+            db.remove(doc_ids=[el.doc_id])
             await bot.send_message(message.channel, "`Quote removed`")
         else:
             await bot.send_message(message.channel, "`Quote not found`")
@@ -221,7 +221,7 @@ async def quote():
         await bot.say("`No quotes found.`")
     else:
         x = randint(1, len(db))
-        await bot.say(str(db.all()[x-1]['text']))
+        await bot.say("`" + str(db.all()[x-1]['text']) + "`")
 
 @bot.command()
 async def hello():
