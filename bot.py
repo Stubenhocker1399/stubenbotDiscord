@@ -194,6 +194,16 @@ async def on_message(message):
                     embed = discord.Embed()
                     embed.set_image(url='https://' + host + hostPrepend + emote + hostAppend)
                     await bot.send_message(message.channel, embed=embed)
+    if message.content.startswith('/addquote '):
+        db.insert({'text':message.content[10:]})
+        await bot.say("`Quote saved`")
+    if message.content.startswith('/rmquote '):
+        if db.contains(where('text') == message.content[9:]):
+            db.update(delete('text'), where('text') == message.content[9:])
+            await bot.say("`Quote removed`")
+        else:
+            await bot.say("`Quote not found`")
+
     await bot.process_commands(message)
 
 @bot.command()
@@ -211,19 +221,6 @@ async def quote():
     else:
         x = randint(1, len(db))
         await bot.say(str(db.all()[x-1]['text']))
-
-@bot.command()
-async def addquote(quoteText):
-    db.insert({'text':quoteText})
-    await bot.say("`Quote saved`")
-
-@bot.command()
-async def rmquote(quoteText):
-    if db.contains(where('text') == quoteText):
-        db.update(delete('text'), where('text') == quoteText)
-        await bot.say("`Quote removed`")
-    else:
-        await bot.say("`Quote not found`")
 
 @bot.command()
 async def hello():
