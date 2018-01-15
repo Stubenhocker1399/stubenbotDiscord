@@ -204,7 +204,19 @@ async def on_message(message):
             await bot.send_message(message.channel, "`Quote removed`")
         else:
             await bot.send_message(message.channel, "`Quote not found`")
-
+    if message.content.startswith('/SPOILER '):
+            member = message.author
+            spoilerText = "SPOILER"
+            text = message.content[9:]
+            newt = ""
+            await bot.delete_message(message)
+            #for(i=0,i<len(text),i=i+1):
+            for i in range(0,len(text)):
+                 newt = newt + spoilerText[i%len(spoilerText)]
+                 newt = newt + text[i]
+            await bot.send_message(message.channel, "" + member.mention + " SPOILER " + newt)
+    if message.content.startswith('/version'):
+            await bot.send_message(message.channel,  discord.version_info)
     await bot.process_commands(message)
 
 @bot.command()
