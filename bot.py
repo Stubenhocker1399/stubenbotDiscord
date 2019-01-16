@@ -7,6 +7,7 @@ import aiohttp
 from tinydb import TinyDB, where
 from tinydb.operations import delete
 from random import randint
+import ts3
 
 #####python#####
 import ast
@@ -20,6 +21,73 @@ description = '''
 A bot for executing python commands.
 '''
 bot = commands.Bot(command_prefix='/', description=description)
+
+### ts3
+
+def getDepth(channellist, channel, depth):
+  if(channel['pid'] == '0'):
+    return depth
+  else:
+    #for channel in channellist:    # for name, age in dictionary.iteritems():  (for Python 2.x)
+    #  if channel['cid'] == channel['pid']:
+    #      print(name)
+    #return getDepth(channellist, channellist[ch])
+    nextid = [pchannel for pchannel in channellist if pchannel['cid'] == channel['pid']]
+    #print(nextid)
+
+    return getDepth(channellist, nextid[0], depth + 1)
+
+@bot.command()
+async def tsinfo():
+    returnstring = "```diff\n"
+    with open("ts3connectionstring", "r") as file:
+        #print(file.readline())
+        with ts3.query.TS3ServerConnection(file.readline()) as ts3conn:
+            ts3conn.exec_("use", sid=2)
+            #print(ts3conn.query("clientlist", "away", "uid").all())
+            #print(ts3conn.query("channellist").all())
+            channellist = ts3conn.query("channellist").all()
+            clientlist = ts3conn.query("clientlist", "away", "uid").all()
+            print()
+            for channel in channellist:
+                #channel = {'channel_needed_subscribe_power': '0', 'channel_order': '780', 'cid': '781', 'pid': '791', 'channel_name': 'Talk room 5', 'total_clients': '1'}
+                
+                # hack with hardcoded channel id to don't show the queryuser channel if only it is in it
+                if int(channel['total_clients']) > 0 and not (channel['cid'] == '14' and channel['total_clients'] == '1'):
+                    depth = getDepth(channellist, channel, 0)
+                    print('', end='')
+                    depthstring = ""
+                    for x in range(0, depth):
+                        depthstring += '    '
+                    print(depthstring, end='')
+                    returnstring += depthstring
+                    # to hide: [ anything spacer anything ]
+                    #if(channel['channel_name'][:9]=='[spacer0]'):
+                    #  print(channel['channel_name'][9:])
+                    #else:
+                    #  print(channel['channel_name'])
+                    
+                    p = re.compile(r'\[[^\]]*spacer[^\]]*\](.*)')
+                    name = channel['channel_name']
+                    m = p.fullmatch(name)
+                    if m:
+                        name = m.group(1)
+                    
+                    returnstring += name + '\n'
+                    clients = [client for client in clientlist if client['cid'] == channel['cid']]
+                    depthstring+='    '
+                    for client in clients:
+                        if client['client_type'] == '0':
+                            print('+', end='')
+                            returnstring+='+'
+                            print(depthstring, end='')
+                            returnstring+=depthstring
+                            print('⏺ ' + client['client_nickname'])
+                            returnstring+='⏺ ' + client['client_nickname'] + '\n'
+    await bot.say(returnstring + "\n```")
+
+###
+
 
 #####python#####
 @contextlib.contextmanager
